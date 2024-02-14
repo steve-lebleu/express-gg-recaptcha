@@ -1,4 +1,4 @@
-![Github action workflow status](https://github.com/steve-lebleu/express-gg-recaptcha/actions/workflows/build.yml/badge.svg?branch=master)
+![Github action workflow status](https://github.com/steve-lebleu/express-gg-recaptcha/actions/workflows/build.yml/badge.svg?branch=main)
 [![Coverage Status](https://coveralls.io/repos/github/steve-lebleu/express-gg-recaptcha/badge.svg?branch=main)](https://coveralls.io/github/steve-lebleu/express-gg-recaptcha?branch=main)
 [![CodeFactor](https://www.codefactor.io/repository/github/steve-lebleu/express-gg-recaptcha/badge?s=315e10425bc4c886cbc067d1ff2faa767e0cd04d)](https://www.codefactor.io/repository/github/steve-lebleu/express-gg-recaptcha)
 ![GitHub Release](https://img.shields.io/github/v/release/steve-lebleu/express-gg-recaptcha?logo=Github)
