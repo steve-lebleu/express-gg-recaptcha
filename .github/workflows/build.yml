@@ -18,11 +18,6 @@ jobs:
           node-version: '20.9.0'
       - name: Install local dependencies
         run:  npm i
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-files
-          path: dist
       - name: Execute tests suites
         run: npm run ci:test
       - name: Publish to coveralls.io

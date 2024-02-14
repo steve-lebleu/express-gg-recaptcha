@@ -15,9 +15,9 @@ Endpoint protection using express validation midlleware.
 - Project should be created in https://www.google.com/recaptcha/admin/.
 - Domain name of the consummer application must be whitelisted in https://www.google.com/recaptcha/admin/. 
 - Front-end client must integrate Google recaptcha srcripts in order to call your backend, who's call the Google API.
-- An environment variable named *GG_RECAPTCHA_URL*, which has as value the url to attack to verify the token.
-- An environment variable name *GG_RECAPTCHA_SCORE*, which has as value the minimal score required to succeed (between 0 and 1).
-- An environment secret named *GG_RECAPTCHA_SECRET*, which has as value the Google recaptcha secret associated to the site key.
+- An environment variable named *GG_RECAPTCHA_URL*: url to attack to verify the token.
+- An environment variable name *GG_RECAPTCHA_SCORE*: minimal score required to succeed (between 0 and 1).
+- An environment secret named *GG_RECAPTCHA_SECRET*: Google recaptcha secret associated to the site key.
   
 ## How to ?
 
@@ -27,7 +27,7 @@ Endpoint protection using express validation midlleware.
 const { verifyRecaptchaV3 } = require('express-gg-recaptcha/gg-recaptcha.middleware');
 ```
 
-#### 2. Plug re-captcha middleware on the route which should be protected
+#### 2. Plug re-captcha middleware on the endpoint to protect
 
 ```javascript
 app.use('/api', verifyRecaptchaV3(logger), controllerAction);
