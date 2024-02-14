@@ -41,7 +41,7 @@ The function take one optional parameter - the local logger, and returns the mid
 $ npm run test
 ```
 
-## Licence
+## License
 
 [MIT](LICENCE.md)
 
