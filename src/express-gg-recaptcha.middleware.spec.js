@@ -8,7 +8,6 @@ const axios = require('axios')
 
 const { verifyRecaptchaV3 } = require('./express-gg-recaptcha.middleware');
 
-
 describe('Re-Captcha API', () => {
   const logger = {
     silly: (message) => { console.log(message); },
