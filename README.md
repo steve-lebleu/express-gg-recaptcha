@@ -2,7 +2,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/steve-lebleu/express-gg-recaptcha/badge.svg?branch=master)](https://coveralls.io/github/steve-lebleu/express-gg-recaptcha?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/steve-lebleu/express-gg-recaptcha/badge)](https://www.codefactor.io/repository/github/steve-lebleu/express-gg-recaptcha)
 ![GitHub Release](https://img.shields.io/github/v/release/steve-lebleu/express-gg-recaptcha?logo=Github)
-![Known Vulnerabilities](https://snyk.io/test/github/steve-lebleu/express-gg-recaptcha/badge.svg)
 ![GitHub License](https://img.shields.io/github/license/steve-lebleu/express-gg-recaptcha?color=%230A7BBC)
 
 # Google ReCaptcha V3 for Express.js

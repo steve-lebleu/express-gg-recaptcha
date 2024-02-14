@@ -1,7 +1,7 @@
 name: Build
 on:
   push:
-    branches: [ dev, master, hotfix/*, feature/*, release/* ]
+    branches: [ dev, main, hotfix/*, feature/*, release/* ]
 jobs:
   test:
     name: Test
