@@ -4,6 +4,7 @@
   "description": "Express.js middleware for back-end to back-end Google recpatcha token validation.",
   "main": "index.js",
   "scripts": {
+    "ci:test": "jest src/express-gg-recaptcha.middleware.spec.js",
     "test": "jest src/express-gg-recaptcha.middleware.spec.js"
   },
   "author": "Steve Lebleu",

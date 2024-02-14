@@ -2,7 +2,7 @@
 
 process.env.GG_RECAPTCHA_URL    = 'https://www.google.com/recaptcha/api/siteverify';
 process.env.GG_RECAPTCHA_SCORE  = 0.7;
-process.env.GG_RECAPTCHA_SECRET = '6LdiHAgcAAAAAOFtPpaMZKaSwDdYTlUtc1gzH-Dn';
+process.env.GG_RECAPTCHA_SECRET = 'gg-amazing-secret';
 
 const axios = require('axios')
 
