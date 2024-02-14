@@ -1,127 +1,26 @@
 'use strict';
 
+process.env.GG_RECAPTCHA_URL    = 'https://www.google.com/recaptcha/api/siteverify';
+process.env.GG_RECAPTCHA_SCORE  = 0.7;
+process.env.GG_RECAPTCHA_SECRET = '6LdiHAgcAAAAAOFtPpaMZKaSwDdYTlUtc1gzH-Dn';
+
 const axios = require('axios')
-const supertest = require('supertest');
-const express = require('express');
-const { GGRecaptchaV3Router } = require('./index');
-const { verifyRecaptchaV3 } = require('./gg-recaptcha.middleware');
-const { Parameter } = require('./../parameters');
-const{ memoryMongo } = require('./../unit-tests');
+
+const { verifyRecaptchaV3 } = require('./express-gg-recaptcha.middleware');
+
 
 describe('Re-Captcha API', () => {
-  memoryMongo.setupMemoryMongo();
-  
-  const app = express();
-  app.use(express.json());
-  app.use('/api', GGRecaptchaV3Router('gerust'));
-
-  const request = supertest(app);
-
-  describe('POST /api/recaptcha/v3/verify', () => {
-    let mockParameterFind, mockPromiseAll;
-    beforeEach(() => {
-      mockParameterFind = jest.spyOn(Parameter, 'findParameter').mockImplementation(async () => {
-        return Promise.resolve({ value: 'value' });
-      });
-      mockPromiseAll = jest.spyOn(Promise, 'all').mockImplementation(async () => {
-        return Promise.resolve([ { value: '6LdiHAgcAAAAAOFtPpaMZKaSwDdYTlUtc1gzH-Dn' }, { value: '0.5' } ]);
-      });
-    });
-
-    afterAll(() => {
-      mockPromiseAll.mockRestore();
-      mockParameterFind.mockRestore();
-    });
-
-    it('should returns with a success property', async () => {
-      const response = await request.post('/api/recaptcha/v3/verify').send({ token: 'atoken' });
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('success');
-    });
-
-    it('should returns false when request to Google API fails', async () => {
-      const mockAxios = jest.spyOn(axios, 'post').mockImplementation(async (url) => {
-        return Promise.resolve({
-          status: 400,
-          data: {},
-        });
-      });
-      const response = await request.post('/api/recaptcha/v3/verify').send({ token: 'atoken' });
-
-      expect(response.status).toBe(200);
-      expect(response.body.success).toEqual(false);
-      mockAxios.mockRestore();
-    });
-
-    it('should returns false when Google say NO', async () => {
-      const mockAxios = jest.spyOn(axios, 'post').mockImplementation(async (url) => {
-        return Promise.resolve({
-          status: 200,
-          data: {
-            success: false,
-            score: 0.1,
-          },
-        });
-      });
-      const response = await request.post('/api/recaptcha/v3/verify').send({ token: 'atoken' });
-
-      expect(response.status).toBe(200);
-      expect(response.body.success).toEqual(false);
-      mockAxios.mockRestore();
-    });
-
-    it('should returns false when Google say YES but the score is KO regarding local configuration', async () => {
-      const mockAxios = jest.spyOn(axios, 'post').mockImplementation(async (url) => {
-        return Promise.resolve({
-          status: 200,
-          data: {
-            success: true,
-            score: 0.4,
-          },
-        });
-      });
-      const response = await request.post('/api/recaptcha/v3/verify').send({ token: 'atoken' });
-
-      expect(response.status).toBe(200);
-      expect(response.body.success).toEqual(false);
-      mockAxios.mockRestore();
-    });
-
-    it('should returns true when Google say YES and the score is OK regarding local configuration', async () => {
-      const mockAxios = jest.spyOn(axios, 'post').mockImplementation(async (url) => {
-        return Promise.resolve({
-          status: 200,
-          data: {
-            success: true,
-            score: 0.6,
-          },
-        });
-      });
-      const response = await request.post('/api/recaptcha/v3/verify').send({ token: 'atoken' });
-
-      expect(response.status).toBe(200);
-      expect(response.body.success).toEqual(true);
-      mockAxios.mockRestore();
-    });
-  });
+  const logger = {
+    silly: (message) => { console.log(message); },
+    error: (message) => { console.log(message); },
+    debug: (message) => { console.log(message); }
+  };
 
   describe('Middleware verifyRecaptchaV3', () => {
-    let mockParameterFind, mockPromiseAll;
-    let middleware = verifyRecaptchaV3('TEST');
+    let middleware = verifyRecaptchaV3(logger);
 
-    beforeEach(() => {
-      mockParameterFind = jest.spyOn(Parameter, 'findParameter').mockImplementation(async () => {
-        return Promise.resolve({ value: 'value' });
-      });
-      mockPromiseAll = jest.spyOn(Promise, 'all').mockImplementation(async () => {
-        return Promise.resolve([ { value: '6LdiHAgcAAAAAOFtPpaMZKaSwDdYTlUtc1gzH-Dn' }, { value: '0.5' } ]);
-      });
-    });
-
-    afterAll(() => {
-      mockPromiseAll.mockRestore();
-      mockParameterFind.mockRestore();
-    });
+    beforeEach(() => {});
+    afterAll(() => {});
 
     it('should next in Unauthorized error when request to Google API fails', async () => {
       const mockAxios = jest.spyOn(axios, 'post').mockImplementation(async (url) => {
@@ -168,7 +67,7 @@ describe('Re-Captcha API', () => {
       mockNext.mockRestore();
     });
 
-    it('should next in Unauthorized error when Google say YES but the score is KO regarding local configuration', async () => {
+    it('should next in unauthorized error when Google say YES but the score is KO regarding local configuration', async () => {
       const mockAxios = jest.spyOn(axios, 'post').mockImplementation(async (url) => {
         return Promise.resolve({
           status: 200,
@@ -181,7 +80,7 @@ describe('Re-Captcha API', () => {
       const mockNext = jest.fn((error) => {
         expect(error).toBeDefined();
         expect(error.status).toEqual(401);
-        expect(error.message).toContain('Re-captcha verification failed');
+        expect(error.message).toContain('Re-captcha verification call failed');
       });
 
       await middleware({ body: { token: 'atoken' } }, {}, mockNext);
@@ -197,7 +96,7 @@ describe('Re-Captcha API', () => {
           status: 200,
           data: {
             success: true,
-            score: 0.6,
+            score: 0.7,
           },
         });
       });

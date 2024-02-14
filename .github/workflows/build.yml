@@ -1,0 +1,32 @@
+name: Build
+on:
+  push:
+    branches: [ dev, master, hotfix/*, feature/*, release/* ]
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      RUNNER: github
+      NODE_ENV: test
+    steps:
+      - name: Github checkout
+        uses: actions/checkout@v4
+      - name: Setup node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.9.0'
+      - name: Install local dependencies
+        run:  npm i
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: dist
+      - name: Execute tests suites
+        run: npm run ci:test
+      - name: Publish to coveralls.io
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./reports/coverage/lcov.info

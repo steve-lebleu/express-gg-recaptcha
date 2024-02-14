@@ -1,0 +1,73 @@
+name: Release
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      RUNNER: github
+      NODE_ENV: test
+    steps:
+      - name: Github checkout
+        uses: actions/checkout@v4
+      - name: Setup node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.9.0'
+      - name: Install local dependencies
+        run:  npm i
+      - name: Execute tests suites
+        run: npm run ci:test
+      - name: Publish to coveralls.io
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./reports/coverage/lcov.info
+  release:
+    name: Release on Github
+    runs-on: ubuntu-latest
+    needs: [ test ]
+    steps:
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: node-modules-${{ hashfiles('**/package-lock.json') }}
+      - name: Github checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.9.0'
+      - name: Create release
+        uses: konfer-be/action-create-release-from-tag@v1.0.12
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+  publish:
+    name: Publish on NPM
+    runs-on: ubuntu-latest
+    needs: [ test ]
+    steps:
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: node-modules-${{ hashfiles('**/package-lock.json') }}
+      - name: Github checkout
+        uses: actions/checkout@v4
+      - name: Setup node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.9.0'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Delete unpackaged files
+        run: rm -rf ./.github
+      - name: Publish package on NPM registery
+        run: npm ci & npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
