@@ -41,6 +41,10 @@ The function take one optional parameter - the local logger, and returns the mid
 $ npm run test
 ```
 
+## Licence
+
+[MIT]('./LICENCE.md')
+
 ## Contact
 
 ping@steve.lebleu.dev
