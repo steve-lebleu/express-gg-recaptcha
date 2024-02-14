@@ -43,7 +43,7 @@ $ npm run test
 
 ## Licence
 
-[MIT]('./LICENCE.md')
+[MIT](LICENCE.md)
 
 ## Contact
 
