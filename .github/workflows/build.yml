@@ -20,10 +20,6 @@ jobs:
         run:  npm i
       - name: Execute tests suites
         run: npm run ci:test
-      - name: Debug
-        run: ls -la 
-      - name: Debug
-        run: cat coverage/lcov.info
       - name: Publish to coveralls.io
         uses: coverallsapp/github-action@v1.1.2
         with:
