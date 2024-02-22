@@ -14,7 +14,7 @@ const axios = require('axios');
  * @see https://developers.google.com/search/blog/2018/10/introducing-recaptcha-v3-new-way-to
  * @see https://developers.google.com/recaptcha/docs/v3
  */
-exports.verifyRecaptchaV3 = (secret, score = 0.7, logger = null) => async (req, res, next) => {
+exports.verifyGGRecaptchaV3 = (secret, score = 0.7, logger = null) => async (req, res, next) => {
 
   if (!logger || (!logger['silly'] || !logger['debug'] || !logger['error'])) {
     logger = {
@@ -30,7 +30,8 @@ exports.verifyRecaptchaV3 = (secret, score = 0.7, logger = null) => async (req, 
     throw new Error(`Bad parameter secret: secret is mandatory as pattern /^[0-9a-zA-Z]{40}$/g, ${secret} given doesn't`);
   }
 
-  if (score && isNaN(parseFloat(score, 10) || (score < 0 && score > 1))) {
+  if (score && isNaN(parseFloat(score, 10)) || (score < 0 || score > 1)) {
+    console.log('hereiscond')
     throw new Error(`Bad parameter score: score should be a float between 0 and 1, ${score} given`);
   }
 

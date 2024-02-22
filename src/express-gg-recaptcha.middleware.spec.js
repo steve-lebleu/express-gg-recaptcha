@@ -4,23 +4,43 @@ require('dotenv').config();
 
 const axios = require('axios')
 
-const { verifyRecaptchaV3 } = require('./express-gg-recaptcha.middleware');
+const { verifyGGRecaptchaV3 } = require('./express-gg-recaptcha.middleware');
 
 describe('::verifyRecaptchaV3 - Google Re-Captcha V3 verification middleware for Express.js', () => {
 
-  let middleware = verifyRecaptchaV3(process.env.GG_RECAPTCHA_SECRET, process.env.GG_RECAPTCHA_SCORE);
+  let middleware = verifyGGRecaptchaV3(process.env.GG_RECAPTCHA_SECRET, process.env.GG_RECAPTCHA_SCORE);
 
-  it('should throws error when a valid secret is not provided', () => {
+  it('should throws error when a valid secret is not provided', async () => {
     try {
-      verifyRecaptchaV3();
+      const badMiddleware = verifyGGRecaptchaV3('toto');
+      await badMiddleware({ body: { token: 'atoken' } }, {}, (e) => e)
     } catch(e) {
       expect(e.message).toContain('Bad parameter secret');
     }
   });
 
-  it('should throws error when provided score is not valid', () => {
+  it('should throws error when provided score is a string', async () => {
     try {
-      verifyRecaptchaV3(process.env.GG_RECAPTCHA_SECRET, 'score');
+      const badMiddleware = verifyGGRecaptchaV3(process.env.GG_RECAPTCHA_SECRET, 'score');
+      await badMiddleware({ body: { token: 'atoken' } }, {}, (e) => e)
+    } catch(e) {
+      expect(e.message).toContain('Bad parameter score');
+    }
+  });
+
+  it('should throws error when provided score is lower than 0', async () => {
+    try {
+      const badMiddleware = verifyGGRecaptchaV3(process.env.GG_RECAPTCHA_SECRET, -1);
+      await badMiddleware({ body: { token: 'atoken' } }, {}, (e) => e)
+    } catch(e) {
+      expect(e.message).toContain('Bad parameter score');
+    }
+  });
+
+  it('should throws error when provided score is greather than 1', async () => {
+    try {
+      const badMiddleware = verifyGGRecaptchaV3(process.env.GG_RECAPTCHA_SECRET, 2);
+      await badMiddleware({ body: { token: 'atoken' } }, {}, (e) => e)
     } catch(e) {
       expect(e.message).toContain('Bad parameter score');
     }
@@ -89,6 +109,29 @@ describe('::verifyRecaptchaV3 - Google Re-Captcha V3 verification middleware for
       expect(error).toBeDefined();
       expect(error.status).toEqual(401);
       expect(error.message).toContain('Re-captcha verification call failed');
+    });
+
+    await middleware({ body: { token: 'atoken' } }, {}, mockNext);
+
+    expect(mockNext).toHaveBeenCalled(); 
+    mockAxios.mockRestore();
+    mockNext.mockRestore();
+  });
+
+  it('should next with catched error when unexpected error occurs', async () => {
+    const mockAxios = jest.spyOn(axios, 'post').mockImplementation(async (url) => {
+      return Promise.reject({
+        status: 500,
+        data: {
+          action: 'contact',
+          success: false,
+          score: 0.4,
+        },
+      });
+    });
+    const mockNext = jest.fn((error) => {
+      expect(error).toBeDefined();
+      expect(error.status).toEqual(500);
     });
 
     await middleware({ body: { token: 'atoken' } }, {}, mockNext);
