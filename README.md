@@ -31,7 +31,7 @@ const { verifyRecaptchaV3 } = require('express-gg-recaptcha/gg-recaptcha.middlew
 #### 2. Plug re-captcha middleware generator on the endpoint to protect
 
 ```javascript
-app.use('/api', verifyRecaptchaV3(process.env.GG_RECAPTCHA_SECRET, process.env.GG_RECAPTCHA_SCORE, logger), controllerAction);
+app.use('/api', verifyRecaptchaV3(GG_RECAPTCHA_SECRET, GG_RECAPTCHA_SCORE, logger), controllerAction);
 ```
 
 The function takes one required and two optional parameters:
@@ -39,18 +39,14 @@ The function takes one required and two optional parameters:
 - Google recaptcha secret - Required
 - Minimal score to consider as valid, between 0 and 1 - Optional - Default: 0.7
 - A local logger who's can be useful to debug - Optional - Default on process.stdout
- 
-Practically, it returns next a middleware, so this is how your endpoint looks like after the function is executed:
 
-```javascript
-app.use('/api', (req, res, next => { /* Here we do the job */ }), controllerAction);
-```
+The middleware expects next the token to verify plugged on the body of the request - so on **req.body.token**.
 
-The middleware expects the token to verify plugged on the body of the request - so on req.body.token.
-
-- It returns a 400 if the token is not present or not valid.
-- It returns a 401 if the verification fails.
-- It next to your endpoint if the check is OK.
+- It throws an error if:
+  - secret is not provided or with an invalid format
+  - score is provided explicitely with an invalid format
+- It returns a 401 if the token verification fails
+- It next to your endpoint if the check is OK
 
 ## Tests
 
