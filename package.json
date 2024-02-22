@@ -1,15 +1,23 @@
 {
   "name": "express-gg-recaptcha",
   "version": "1.0.1",
-  "description": "Express.js middleware for back-end to back-end Google recpatcha token validation.",
+  "description": "Express.js middleware for back-end to back-end Google recpatcha V3 token validation.",
   "main": "index.js",
   "scripts": {
-    "ci:test": "nyc --reporter=lcov --report-dir=./reports/coverage npm run test -- --coverage",
-    "test": "jest src/express-gg-recaptcha.middleware.spec.js"
+    "ci:test": "nyc --reporter=lcov --report-dir=./reports/lcov-coverage npm run test -- --coverage",
+    "test": "nyc --reporter=html --report-dir=./reports/html-coverage jest src/express-gg-recaptcha.middleware.spec.js"
   },
+  "keywords": [
+    "express",
+    "middleware",
+    "recaptcha",
+    "recaptchav3",
+    "google"
+  ],
   "author": "Steve Lebleu",
   "license": "ISC",
   "devDependencies": {
+    "dotenv": "^16.4.5",
     "jest": "^29.7.0",
     "nyc": "^15.1.0"
   },
