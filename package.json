@@ -1,6 +1,6 @@
 {
   "name": "express-gg-recaptcha",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Express.js middleware for back-end to back-end Google recpatcha V3 token validation.",
   "main": "index.js",
   "scripts": {
