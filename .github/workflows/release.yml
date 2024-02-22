@@ -30,7 +30,7 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ./reports/coverage/lcov.info
+          path-to-lcov: ./reports/lcov-coverage/lcov.info
   release:
     name: Release on Github
     runs-on: ubuntu-latest
