@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "ci:test": "nyc --reporter=lcov --report-dir=./reports/coverage npm run test -- --coverage",
-    "test": "jest src/express-gg-recaptcha.middleware.spec.js -- --verbose=true"
+    "test": "jest src/express-gg-recaptcha.middleware.spec.js"
   },
   "keywords": [
     "express",
