@@ -18,10 +18,15 @@ jobs:
           node-version: '20.9.0'
       - name: Install local dependencies
         run:  npm i
+      - name: Create .env file
+        run: |
+          touch .env
+          echo GG_RECAPTCHA_SCORE = "${{ vars.GG_RECAPTCHA_SCORE }}" >> .env
+          echo GG_RECAPTCHA_SECRET = "${{ secrets.GG_RECAPTCHA_SECRET }}" >> .env
       - name: Execute tests suites
         run: npm run ci:test
       - name: Publish to coveralls.io
-        uses: coverallsapp/github-action@v1.1.2
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./coverage/lcov.info
