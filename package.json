@@ -4,7 +4,7 @@
   "description": "Express.js middleware for back-end to back-end Google recpatcha V3 token validation.",
   "main": "index.js",
   "scripts": {
-    "ci:test": "nyc --reporter=lcov --report-dir=./reports/lcov-coverage npm run test",
+    "ci:test": "nyc --reporter=lcov --report-dir=./reports/lcov-coverage npm run test -- --coverage",
     "test": "nyc --reporter=html --report-dir=./reports/html-coverage jest src/express-gg-recaptcha.middleware.spec.js"
   },
   "keywords": [
