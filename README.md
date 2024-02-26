@@ -15,7 +15,6 @@ Endpoint protection using express validation midlleware.
 - A project in https://www.google.com/recaptcha/admin/.
 - A domain name whitelisted in this project. 
 - A Google recaptcha front-end integration in order to call your backend, who's call the Google API.
-- A Google recaptcha secret associated to the site key.
 
 :link: [Google official documentation](https://developers.google.com/recaptcha/docs/verify)
 
@@ -24,13 +23,13 @@ Endpoint protection using express validation midlleware.
 #### 1. Import re-captcha middleware
 
 ```javascript
-const { verifyGGRecaptchaV3 } = require('express-gg-recaptcha/gg-recaptcha.middleware');
+const { verifyGGRecaptchaV3 } = require('express-gg-recaptcha');
 ```
 
 #### 2. Plug re-captcha middleware generator on the endpoint to protect
 
 ```javascript
-app.use('/api', verifyGGRecaptchaV3(secret, score, logger), controllerAction);
+app.use('/protected-path', verifyGGRecaptchaV3(secret, score, logger), controllerAction);
 ```
 
 The function takes one required and two optional parameters:
@@ -39,17 +38,23 @@ The function takes one required and two optional parameters:
 - score - Minimal score to consider token as valid, between 0 and 1 - Optional - Default: 0.7
 - logger - A local logger who's can be useful to debug - Optional - Default process.stdout
 
-The middleware expects next the token to verify, plugged on **req.body.token**.
-
-#### 3. Behaviors
-
 The middleware throws an error when:
   - secret is not provided or with an invalid format
   - score is provided explicitely but invalid
+  - 
 
-The middleware call next:
-- with a 401 if the token verification fails
-- with the catched Error instance if an unexpected error occurs
+
+#### 3. Do request
+
+The middleware expects the token to verify on the request body, plugged on **req.body.token**.
+
+```javascript
+$ curl --url "https://domain.com/protected-path" --data "token=ggtoken&param=..."
+```
+
+The middleware calls next:
+- with a 401 Error if the token verification fails
+- with a catched Error if an unexpected error occurs
 - with nothing in case of success
 
 In case of success, the token is removed from the req.body object before to call next.
@@ -66,4 +71,4 @@ $ npm run test
 
 ## Contact
 
-ping@steve.lebleu.dev
+ping@steve-lebleu.dev

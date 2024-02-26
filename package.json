@@ -8,6 +8,14 @@
     "test": "nyc --reporter=html --report-dir=./reports/html-coverage npm run test:unit -- --coverage",
     "test:unit": "jest src/express-gg-recaptcha.middleware.spec.js"
   },
+  "homepage": "https://github.com/steve-lebleu/express-gg-recaptcha#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steve-lebleu/express-gg-recaptcha.git"
+  },
+  "bugs": {
+    "url": "https://github.com/steve-lebleu/express-gg-recaptcha/issues"
+  },
   "keywords": [
     "express",
     "middleware",

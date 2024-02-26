@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const axios = require('axios')
 
-const { verifyGGRecaptchaV3 } = require('./express-gg-recaptcha.middleware');
+const { verifyGGRecaptchaV3 } = require('./index');
 
 describe('::verifyRecaptchaV3 - Google Re-Captcha V3 verification middleware for Express.js', () => {
 
